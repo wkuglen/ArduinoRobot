@@ -17,8 +17,6 @@ int rightLight;
 boolean leftOn;
 boolean rightOn;
 
-long commandStart;
-
 //left drive constants
 int RIGHT_STOP = 92;
 int RIGHT_FORWARD_MAX = RIGHT_STOP - 25;
@@ -29,8 +27,6 @@ int LEFT_FORWARD_MAX = LEFT_STOP + 25;
 int LEFT_BACKWARD_MAX = LEFT_STOP - 25;
 
 void setup() {
-  Serial.begin(9600);
-  
   //servos
   rightServo.attach(rightServoPin);
   leftServo.attach(leftServoPin);
@@ -64,14 +60,8 @@ void loop() {
     leftServo.write(LEFT_BACKWARD_MAX);
     rightServo.write(RIGHT_FORWARD_MAX);
   }
-
-  //print
-  Serial.println("~");
-  Serial.println(leftOn);
-  Serial.println(leftLight);
-  Serial.println(rightOn);
-  Serial.println(rightLight);
-  delay(250);
+  
+  delay(10);
 }
 
 
