@@ -21,12 +21,12 @@ long commandStart;
 
 //left drive constants
 int RIGHT_STOP = 92;
-int RIGHT_FORWARD_MAX = RIGHT_STOP - 50;
-int RIGHT_BACKWARD_MAX = RIGHT_STOP + 50;
+int RIGHT_FORWARD_MAX = RIGHT_STOP - 25;
+int RIGHT_BACKWARD_MAX = RIGHT_STOP + 25;
 //right drive constants
 int LEFT_STOP = 81;
-int LEFT_FORWARD_MAX = LEFT_STOP + 50;
-int LEFT_BACKWARD_MAX = LEFT_STOP - 50;
+int LEFT_FORWARD_MAX = LEFT_STOP + 25;
+int LEFT_BACKWARD_MAX = LEFT_STOP - 25;
 
 void setup() {
   Serial.begin(9600);
@@ -49,23 +49,29 @@ void loop() {
   rightLight = analogRead(rightPhotoPin);
 
   //process
-  leftOn = leftLight < 43;
-  rightOn = rightLight < 18;
+  leftOn = leftLight < 30;
+  rightOn = rightLight < 40;
   if (rightOn && leftOn) {
-    //go straight
+    leftServo.write(LEFT_FORWARD_MAX);
+    rightServo.write(RIGHT_FORWARD_MAX);
   } else if (!rightOn && !leftOn) {
-    //uh oh
+    leftServo.write(LEFT_STOP);
+    rightServo.write(RIGHT_STOP);
   } else if (rightOn && !leftOn) {
-    //turn right
+    leftServo.write(LEFT_FORWARD_MAX);
+    rightServo.write(RIGHT_BACKWARD_MAX);
   } else if (!rightOn && leftOn) {
-    //turn left
+    leftServo.write(LEFT_BACKWARD_MAX);
+    rightServo.write(RIGHT_FORWARD_MAX);
   }
 
   //print
   Serial.println("~");
   Serial.println(leftOn);
+  Serial.println(leftLight);
   Serial.println(rightOn);
-  delay(500);
+  Serial.println(rightLight);
+  delay(250);
 }
 
 
