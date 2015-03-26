@@ -21,12 +21,12 @@ boolean rightOn;
 
 //left drive constants
 int RIGHT_STOP = 92;
-int RIGHT_FORWARD_MAX = RIGHT_STOP - 20;
-int RIGHT_BACKWARD_MAX = RIGHT_STOP + 20;
+int RIGHT_FORWARD_MAX = RIGHT_STOP - 10;
+int RIGHT_BACKWARD_MAX = RIGHT_STOP + 10;
 //right drive constants
 int LEFT_STOP = 81;
-int LEFT_FORWARD_MAX = LEFT_STOP + 20;
-int LEFT_BACKWARD_MAX = LEFT_STOP - 20;
+int LEFT_FORWARD_MAX = LEFT_STOP + 10;
+int LEFT_BACKWARD_MAX = LEFT_STOP - 10;
 
 void setup() {
   Serial.begin(9600);
@@ -40,8 +40,11 @@ void setup() {
     rightServo.write(RIGHT_STOP);
     leftServo.write(LEFT_STOP);
   }
- leftLightMAX = analogRead(leftPhotoPin);
- rightLightMAX = analogRead(rightPhotoPin);
+ leftLightMAX = 30;
+ rightLightMAX = 30;
+ Serial.println(leftLightMAX);
+ Serial.println(rightLightMAX);
+ Serial.println("~");
 }
 
 void loop() {
@@ -52,8 +55,8 @@ void loop() {
   Serial.print(", ");
   Serial.println(rightLight);
   //process
-  leftOn = leftLight < leftLightMAX + 7;
-  rightOn = rightLight < rightLightMAX + 7;
+  leftOn = leftLight < leftLightMAX;
+  rightOn = rightLight < rightLightMAX;
   if (rightOn && leftOn) {
     leftServo.write(LEFT_FORWARD_MAX);
     rightServo.write(RIGHT_FORWARD_MAX);
@@ -68,7 +71,7 @@ void loop() {
     rightServo.write(RIGHT_FORWARD_MAX);
   }
   
-  delay(100);
+  delay(50);
 }
 
 
