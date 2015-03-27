@@ -14,8 +14,8 @@ int rightPhotoPin = A1;
 //variables
 int leftLight;
 int rightLight;
-int leftLightMAX = 45;
-int rightLightMAX = 45;
+int leftLightMAX = 35;
+int rightLightMAX = 35;
 boolean leftOn;
 boolean rightOn;
 
@@ -40,8 +40,8 @@ void setup() {
     rightServo.write(RIGHT_STOP);
     leftServo.write(LEFT_STOP);
   }
- leftLightMAX = 30;
- rightLightMAX = 30;
+ //leftLightMAX = analogRead(leftPhotoPin)+3;
+ //rightLightMAX = analogRead(rightPhotoPin)+3;
  Serial.println(leftLightMAX);
  Serial.println(rightLightMAX);
  Serial.println("~");
@@ -61,8 +61,18 @@ void loop() {
     leftServo.write(LEFT_FORWARD_MAX);
     rightServo.write(RIGHT_FORWARD_MAX);
   } else if (!rightOn && !leftOn) {
-    leftServo.write(LEFT_STOP);
-    rightServo.write(RIGHT_STOP);
+    if(leftLight < rightLight)
+    {
+      leftServo.write(LEFT_BACKWARD_MAX);
+      rightServo.write(RIGHT_FORWARD_MAX);
+    }
+    else
+    {
+      leftServo.write(LEFT_FORWARD_MAX);
+      rightServo.write(RIGHT_BACKWARD_MAX);
+    }
+    //leftServo.write(LEFT_FORWARD_MAX);
+    //rightServo.write(RIGHT_FORWARD_MAX);
   } else if (rightOn && !leftOn) {
     leftServo.write(LEFT_FORWARD_MAX);
     rightServo.write(RIGHT_BACKWARD_MAX);
@@ -71,7 +81,7 @@ void loop() {
     rightServo.write(RIGHT_FORWARD_MAX);
   }
   
-  delay(50);
+  delay(100);
 }
 
 
