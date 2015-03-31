@@ -14,8 +14,8 @@ int rightPhotoPin = A1;
 //variables
 int leftLight;
 int rightLight;
-int leftLightMAX = 35;
-int rightLightMAX = 35;
+int leftLightMAX = 35;//(default value)
+int rightLightMAX = 35;//(default value)
 boolean leftOn;
 boolean rightOn;
 
@@ -29,7 +29,6 @@ int LEFT_FORWARD_MAX = LEFT_STOP + 10;
 int LEFT_BACKWARD_MAX = LEFT_STOP - 10;
 
 void setup() {
-  Serial.begin(9600);
   //servos
   rightServo.attach(rightServoPin);
   leftServo.attach(leftServoPin);
@@ -37,51 +36,46 @@ void setup() {
   //button
   pinMode(buttonPin, INPUT);
   while(digitalRead(buttonPin) != HIGH) {
+    //Rewrites Stop values to current darkness on track
     rightServo.write(RIGHT_STOP);
     leftServo.write(LEFT_STOP);
-  }
- //leftLightMAX = analogRead(leftPhotoPin)+3;
- //rightLightMAX = analogRead(rightPhotoPin)+3;
- Serial.println(leftLightMAX);
- Serial.println(rightLightMAX);
- Serial.println("~");
+  }//WHILE
 }
 
 void loop() {
   //input
   leftLight = analogRead(leftPhotoPin);
   rightLight = analogRead(rightPhotoPin);
-  Serial.print(leftLight);
-  Serial.print(", ");
-  Serial.println(rightLight);
+  
   //process
   leftOn = leftLight < leftLightMAX;
   rightOn = rightLight < rightLightMAX;
   if (rightOn && leftOn) {
+    //IF BOTH ON TRACK
     leftServo.write(LEFT_FORWARD_MAX);
     rightServo.write(RIGHT_FORWARD_MAX);
   } else if (!rightOn && !leftOn) {
-    if(leftLight < rightLight)
-    {
+    //IF BOTH OFF TRACK
+    if(leftLight < rightLight) {
+      //IF LEFT-SIDE DARKER
       leftServo.write(LEFT_BACKWARD_MAX);
       rightServo.write(RIGHT_FORWARD_MAX);
-    }
-    else
-    {
+    } else {
+      //IF RIGHT-SIDE DARKER
       leftServo.write(LEFT_FORWARD_MAX);
       rightServo.write(RIGHT_BACKWARD_MAX);
     }
-    //leftServo.write(LEFT_FORWARD_MAX);
-    //rightServo.write(RIGHT_FORWARD_MAX);
   } else if (rightOn && !leftOn) {
+    //IF RIGHT ON TRACK
     leftServo.write(LEFT_FORWARD_MAX);
     rightServo.write(RIGHT_BACKWARD_MAX);
   } else if (!rightOn && leftOn) {
+    //IF LEFT ON TRACK
     leftServo.write(LEFT_BACKWARD_MAX);
     rightServo.write(RIGHT_FORWARD_MAX);
-  }
+  }//End of IF statements
   
-  delay(100);
+  delay(100);//Small delay to account for change
 }
 
 
