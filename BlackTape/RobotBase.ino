@@ -8,14 +8,16 @@ Servo leftServo;
 int rightServoPin = 5;
 int leftServoPin = 3;
 int buttonPin = 6;
-int rightBumperPin = 7;//?
-int centerBumperPin = 8;//?
-int leftBumperPin = 9;//?
+int leftPhotoPin = A0;
+int rightPhotoPin = A1;
 
 //variables
-boolean leftBumper;
-boolean centerBumper;
-boolean rightBumper;
+int leftLight;
+int rightLight;
+int leftLightMAX = 35;//(default value)
+int rightLightMAX = 35;//(default value)
+boolean leftOn;
+boolean rightOn;
 
 //left drive constants
 int RIGHT_STOP = 92;
@@ -42,28 +44,37 @@ void setup() {
 
 void loop() {
   //input
-  leftBumper = digitalRead(leftBumperPin);
-  centerBumper = digitalRead(centerBumperPin);
-  rightBumper = digitalRead(rightBumperPin);
+  leftLight = analogRead(leftPhotoPin);
+  rightLight = analogRead(rightPhotoPin);
   
   //process
-  if (!leftBumper && centerBumper && !rightBumper) {
-    //hit small object, turn somewhere
-  } else if (leftBumper && !centerBumper && !rightBumper) {
-    //hit left, turn right
-  } else if (!leftBumper && !centerBumper && rightBumper) {
-    //hit right, turn left
-  } else if (leftBumper && centerBumper && rightBumper) {
-    //hit all, back up turn
-  } else if (leftBumper && centerBumper && !rightBumper) {
-    //hit left set, turn right
-  } else if (!leftBumper && centerBumper && rightBumper) {
-    //hit right set, turn left
-  } else {
-    //hit nothing, go straight
-  }
+  leftOn = leftLight < leftLightMAX;
+  rightOn = rightLight < rightLightMAX;
+  if (rightOn && leftOn) {
+    //IF BOTH ON TRACK
+    leftServo.write(LEFT_FORWARD_MAX);
+    rightServo.write(RIGHT_FORWARD_MAX);
+  } else if (!rightOn && !leftOn) {
+    //IF BOTH OFF TRACK
+    if(leftLight < rightLight) {
+      //IF LEFT-SIDE DARKER
+      leftServo.write(LEFT_BACKWARD_MAX);
+      rightServo.write(RIGHT_FORWARD_MAX);
+    } else {
+      //IF RIGHT-SIDE DARKER
+      leftServo.write(LEFT_FORWARD_MAX);
+      rightServo.write(RIGHT_BACKWARD_MAX);
+    }
+  } else if (rightOn && !leftOn) {
+    //IF RIGHT ON TRACK
+    leftServo.write(LEFT_FORWARD_MAX);
+    rightServo.write(RIGHT_BACKWARD_MAX);
+  } else if (!rightOn && leftOn) {
+    //IF LEFT ON TRACK
+    leftServo.write(LEFT_BACKWARD_MAX);
+    rightServo.write(RIGHT_FORWARD_MAX);
+  }//End of IF statements
   
-  //delay
   delay(100);//Small delay to account for change
 }
 
