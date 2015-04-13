@@ -9,9 +9,9 @@ int cyclesLeft;//1 cycle = 50 ms
 int rightServoPin = 5;
 int leftServoPin = 3;
 int buttonPin = 6;
-int rightBumperPin = 7;//?
-int centerBumperPin = 8;//?
-int leftBumperPin = 9;//?
+int rightBumperPin = 11;//?
+int centerBumperPin = 12;//?
+int leftBumperPin = 13;//?
 
 //variables
 boolean leftBumper;
@@ -55,17 +55,47 @@ void loop() {
 
   //process
   if (!leftBumper && centerBumper && !rightBumper) {
-    //hit small object, turn somewhere
+    rightServo.write(RIGHT_BACKWARD_MAX);
+    leftServo.write(LEFT_BACKWARD_MAX);
+    delay(.5 * 1000);
+    rightServo.write(RIGHT_BACKWARD_MAX);
+    leftServo.write(LEFT_FORWARD_MAX);
+    delay(.4 * 1000);
   } else if (leftBumper && !centerBumper && !rightBumper) {
-    //hit left, turn right
+    rightServo.write(RIGHT_BACKWARD_MAX);
+    leftServo.write(LEFT_BACKWARD_MAX);
+    delay(.5 * 1000);
+    rightServo.write(RIGHT_BACKWARD_MAX);
+    leftServo.write(LEFT_FORWARD_MAX);
+    delay(.4 * 1000);
   } else if (!leftBumper && !centerBumper && rightBumper) {
-    //hit right, turn left
+    rightServo.write(RIGHT_BACKWARD_MAX);
+    leftServo.write(LEFT_BACKWARD_MAX);
+    delay(.5 * 1000);
+    rightServo.write(RIGHT_FORWARD_MAX);
+    leftServo.write(LEFT_BACKWARD_MAX);
+    delay(.4 * 1000);
   } else if (leftBumper && centerBumper && rightBumper) {
-    //hit all, back up turn
+    rightServo.write(RIGHT_BACKWARD_MAX);
+    leftServo.write(LEFT_BACKWARD_MAX);
+    delay(.5 * 1000);
+    rightServo.write(RIGHT_BACKWARD_MAX);
+    leftServo.write(LEFT_FORWARD_MAX);
+    delay(.4 * 1000);
   } else if (leftBumper && centerBumper && !rightBumper) {
-    //hit left set, turn right
+    rightServo.write(RIGHT_BACKWARD_MAX);
+    leftServo.write(LEFT_BACKWARD_MAX);
+    delay(.5 * 1000);
+    rightServo.write(RIGHT_BACKWARD_MAX);
+    leftServo.write(LEFT_FORWARD_MAX);
+    delay(.4 * 1000);
   } else if (!leftBumper && centerBumper && rightBumper) {
-    //hit right set, turn left
+    rightServo.write(RIGHT_BACKWARD_MAX);
+    leftServo.write(LEFT_BACKWARD_MAX);
+    delay(.5 * 1000);
+    rightServo.write(RIGHT_FORWARD_MAX);
+    leftServo.write(LEFT_BACKWARD_MAX);
+    delay(.4 * 1000);
   } else {
     rightServo.write(RIGHT_FORWARD_MAX);
     leftServo.write(LEFT_FORWARD_MAX);
