@@ -3,20 +3,23 @@
 //declarations
 Servo rightServo;
 Servo leftServo;
-int cyclesLeft;//1 cycle = 50 ms
 
 //pins
 int rightServoPin = 5;
 int leftServoPin = 3;
 int buttonPin = 6;
-int rightBumperPin = 11;//?
-int centerBumperPin = 12;//?
-int leftBumperPin = 13;//?
+int rightBumperPin = 11;
+int centerBumperPin = 12;
+int leftBumperPin = 13;
+int leftLightPin = 10;//?
+int rightLightPin = 14;//?
 
 //variables
 boolean leftBumper;
 boolean centerBumper;
 boolean rightBumper;
+int leftLight;
+int rightLight;
 
 //left drive constants
 int RIGHT_STOP = 92;
@@ -47,11 +50,17 @@ void loop() {
   leftBumper = digitalRead(leftBumperPin);
   centerBumper = digitalRead(centerBumperPin);
   rightBumper = digitalRead(rightBumperPin);
+  leftLight = digitalRead(leftLightPin);
+  rightLight = digitalRead(rightLightPin);
   Serial.print(leftBumper);
   Serial.print(" ");
   Serial.print(centerBumper);
   Serial.print(" ");
-  Serial.println(rightBumper);
+  Serial.print(rightBumper);
+  Serial.print(" | ");
+  Serial.print(leftLight);
+  Serial.print(" ");
+  Serial.println(rightLight);
 
   //process
   if (!leftBumper && centerBumper && !rightBumper) {
