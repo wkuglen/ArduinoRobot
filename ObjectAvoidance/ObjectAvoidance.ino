@@ -11,8 +11,11 @@ int buttonPin = 6;
 int rightBumperPin = 11;
 int centerBumperPin = 12;
 int leftBumperPin = 13;
-int leftLightPin = 10;//?
-int rightLightPin = 14;//?
+int leftLightPin = A0;
+int rightLightPin = A1;
+int rPin = 8;
+int gPin = 7;
+int bPin = 2;
 
 //variables
 boolean leftBumper;
@@ -31,14 +34,17 @@ int LEFT_FORWARD_MAX = LEFT_STOP + 10;
 int LEFT_BACKWARD_MAX = LEFT_STOP - 10;
 
 void setup() {
-  Serial.begin(9600);
-  
+  //Serial.begin(9600);
+
   //servos
   rightServo.attach(rightServoPin);
   leftServo.attach(leftServoPin);
 
   //button
   pinMode(buttonPin, INPUT);
+  pinMode(rPin, OUTPUT);
+  pinMode(gPin, OUTPUT);
+  pinMode(bPin, OUTPUT);
   while (digitalRead(buttonPin) != HIGH) {
     rightServo.write(RIGHT_STOP);
     leftServo.write(LEFT_STOP);
@@ -50,8 +56,9 @@ void loop() {
   leftBumper = digitalRead(leftBumperPin);
   centerBumper = digitalRead(centerBumperPin);
   rightBumper = digitalRead(rightBumperPin);
-  leftLight = digitalRead(leftLightPin);
-  rightLight = digitalRead(rightLightPin);
+  leftLight = analogRead(leftLightPin);
+  rightLight = analogRead(rightLightPin);
+  /*
   Serial.print(leftBumper);
   Serial.print(" ");
   Serial.print(centerBumper);
@@ -61,14 +68,20 @@ void loop() {
   Serial.print(leftLight);
   Serial.print(" ");
   Serial.println(rightLight);
+  */
 
   //process
   if (!leftBumper && centerBumper && !rightBumper) {
     rightServo.write(RIGHT_BACKWARD_MAX);
     leftServo.write(LEFT_BACKWARD_MAX);
     delay(.5 * 1000);
-    rightServo.write(RIGHT_BACKWARD_MAX);
-    leftServo.write(LEFT_FORWARD_MAX);
+    if (leftLight < rightLight) {
+      rightServo.write(RIGHT_BACKWARD_MAX);
+      leftServo.write(LEFT_FORWARD_MAX);
+    } else {
+      rightServo.write(RIGHT_FORWARD_MAX);
+      leftServo.write(LEFT_BACKWARD_MAX);
+    }
     delay(.4 * 1000);
   } else if (leftBumper && !centerBumper && !rightBumper) {
     rightServo.write(RIGHT_BACKWARD_MAX);
@@ -88,8 +101,13 @@ void loop() {
     rightServo.write(RIGHT_BACKWARD_MAX);
     leftServo.write(LEFT_BACKWARD_MAX);
     delay(.5 * 1000);
-    rightServo.write(RIGHT_BACKWARD_MAX);
-    leftServo.write(LEFT_FORWARD_MAX);
+    if (leftLight < rightLight) {
+      rightServo.write(RIGHT_BACKWARD_MAX);
+      leftServo.write(LEFT_FORWARD_MAX);
+    } else {
+      rightServo.write(RIGHT_FORWARD_MAX);
+      leftServo.write(LEFT_BACKWARD_MAX);
+    }
     delay(.4 * 1000);
   } else if (leftBumper && centerBumper && !rightBumper) {
     rightServo.write(RIGHT_BACKWARD_MAX);
@@ -106,12 +124,24 @@ void loop() {
     leftServo.write(LEFT_BACKWARD_MAX);
     delay(.4 * 1000);
   } else {
-    rightServo.write(RIGHT_FORWARD_MAX);
-    leftServo.write(LEFT_FORWARD_MAX);
+    if (abs(rightLight - leftLight) < 25) {
+      rightServo.write(RIGHT_FORWARD_MAX);
+      leftServo.write(LEFT_FORWARD_MAX);
+    } else if (rightLight > leftLight) {
+      rightServo.write(RIGHT_STOP);
+      leftServo.write(LEFT_FORWARD_MAX);
+    } else if (rightLight < leftLight) {
+      rightServo.write(RIGHT_FORWARD_MAX);
+      leftServo.write(LEFT_STOP);
+    }
   }
+  
+  digitalWrite(rPin, random(0, 2) == 0 ? HIGH : LOW);
+  digitalWrite(gPin, random(0, 2) == 0 ? HIGH : LOW);
+  digitalWrite(bPin, random(0, 2) == 0 ? HIGH : LOW);
 
   //delay
-  delay(.05 * 1000);
+  delay(.02 * 1000);
 }
 
 
