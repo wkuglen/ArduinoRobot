@@ -1,3 +1,7 @@
+/*
+Matthew W., Will K., Ayesh S.
+Object Avoidance Robot
+*/
 #include<Servo.h>
 
 //declarations
@@ -56,12 +60,13 @@ void loop() {
   rightBumper = digitalRead(rightBumperPin);
   leftLight = analogRead(leftLightPin);
   rightLight = analogRead(rightLightPin);
-
   //process
   if (!leftBumper && centerBumper && !rightBumper) {
+    //IF CENTER BUMPER PRESSED
     rightServo.write(RIGHT_BACKWARD_MAX);
     leftServo.write(LEFT_BACKWARD_MAX);
-    delay(.7 * 1000);
+    delay(.5 * 1000);//OLD delay(.7 * 1000);
+    //turn toward light
     if (leftLight < rightLight) {
       rightServo.write(RIGHT_BACKWARD_MAX);
       leftServo.write(LEFT_FORWARD_MAX);
@@ -71,23 +76,29 @@ void loop() {
     }
     delay(.4 * 1000);
   } else if (leftBumper && !centerBumper && !rightBumper) {
+    //IF LEFT BUMPER PRESSED
     rightServo.write(RIGHT_BACKWARD_MAX);
     leftServo.write(LEFT_BACKWARD_MAX);
-    delay(.7 * 1000);
+    delay(.5 * 1000);//OLD delay(.7 * 1000);
+    //turn
     rightServo.write(RIGHT_BACKWARD_MAX);
     leftServo.write(LEFT_FORWARD_MAX);
     delay(.4 * 1000);
   } else if (!leftBumper && !centerBumper && rightBumper) {
+    //IF RIGHT BUMPER PRESSED
     rightServo.write(RIGHT_BACKWARD_MAX);
     leftServo.write(LEFT_BACKWARD_MAX);
-    delay(.7 * 1000);
+    delay(.5 * 1000);//OLD delay(.7 * 1000);
+    //turn
     rightServo.write(RIGHT_FORWARD_MAX);
     leftServo.write(LEFT_BACKWARD_MAX);
     delay(.4 * 1000);
   } else if (leftBumper && centerBumper && rightBumper) {
+    //IF ALL BUMPERS PRESSED
     rightServo.write(RIGHT_BACKWARD_MAX);
     leftServo.write(LEFT_BACKWARD_MAX);
-    delay(.7 * 1000);
+    delay(.5 * 1000);//OLD delay(.7 * 1000);
+    //turn toward light
     if (leftLight < rightLight) {
       rightServo.write(RIGHT_BACKWARD_MAX);
       leftServo.write(LEFT_FORWARD_MAX);
@@ -97,32 +108,41 @@ void loop() {
     }
     delay(.4 * 1000);
   } else if (leftBumper && centerBumper && !rightBumper) {
+    //IF LEFT & CENTER BUMPER PRESSED
     rightServo.write(RIGHT_BACKWARD_MAX);
     leftServo.write(LEFT_BACKWARD_MAX);
-    delay(.7 * 1000);
+    delay(.5 * 1000);//OLD delay(.7 * 1000);
+    //turn
     rightServo.write(RIGHT_BACKWARD_MAX);
     leftServo.write(LEFT_FORWARD_MAX);
     delay(.4 * 1000);
   } else if (!leftBumper && centerBumper && rightBumper) {
+    //IF CENTER & RIGHT BUMPER PRESSED
     rightServo.write(RIGHT_BACKWARD_MAX);
     leftServo.write(LEFT_BACKWARD_MAX);
-    delay(.7 * 1000);
+    delay(.5 * 1000);////OLD:  delay(.7 * 1000);\\\\
+    //turn
     rightServo.write(RIGHT_FORWARD_MAX);
     leftServo.write(LEFT_BACKWARD_MAX);
     delay(.4 * 1000);
   } else {
+    //IF NO BUMPERS PRESSED
     if (abs(rightLight - leftLight) < 25) {
+      //drive straight
       rightServo.write(RIGHT_FORWARD_MAX);
       leftServo.write(LEFT_FORWARD_MAX);
     } else if (rightLight > leftLight) {
+      //turn hard right
       rightServo.write(RIGHT_STOP);
       leftServo.write(LEFT_FORWARD_MAX);
     } else if (rightLight < leftLight) {
+      //turn hard left
       rightServo.write(RIGHT_FORWARD_MAX);
       leftServo.write(LEFT_STOP);
     }
   }
   
+  //Random Lights
   digitalWrite(rPin, random(0, 2) == 0 ? HIGH : LOW);
   digitalWrite(gPin, random(0, 2) == 0 ? HIGH : LOW);
   digitalWrite(bPin, random(0, 2) == 0 ? HIGH : LOW);
@@ -131,4 +151,26 @@ void loop() {
   delay(.02 * 1000);
 }
 
+//REFERENCES
+/* Light Patterns
+RED R--
+YELLOW RG-
+WHITE RGB
+PINK/PURPLE R-B
+BLACK ---
+GREEN -G-
+LIGHT BLUE -GB
+BLUE --B
+*/
+/*Print Formatting
+  Serial.print(leftBumper);
+  Serial.print(" ");
+  Serial.print(centerBumper);
+  Serial.print(" ");
+  Serial.print(rightBumper);
+  Serial.print(" | ");
+  Serial.print(leftLight);
+  Serial.print(" ");
+  Serial.println(rightLight);
+*/
 
